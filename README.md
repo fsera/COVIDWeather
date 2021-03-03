@@ -10,4 +10,4 @@ Figure1.R, Figure2.R, Figure3.R and Table1.R are the codes to reproduce Figures 
 The code MetaRegressionModels.R contain the multilevel meta-regression models fitted which results are reported in Table 2 and Supplementary Table 5
 
 # Effective reproduction number calculation
-The code for calculating the effective reproduction number Re is in the directory 
+The code for calculating the effective reproduction number Re is in the directory covid-climate-rt
