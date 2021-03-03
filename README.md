@@ -8,3 +8,6 @@ The file mcc_covid_data_analysis.RData contains the metereological variables, th
 # Code
 Figure1.R, Figure2.R, Figure3.R and Table1.R are the codes to reproduce Figures 1, 2 3 and Table 1 of the paper.
 The code MetaRegressionModels.R contain the multilevel meta-regression models fitted which results are reported in Table 2 and Supplementary Table 5
+
+# Effective reproduction number calculation
+The code for calculating the effective reproduction number Re is in the directory 
