@@ -1,6 +1,9 @@
 # COVIDWeather
 This repository contains the data and the code to reproduce the results of the paper 
-"Potential drivers of COVID-19 seasonality in 409 cities across 26 countries".
+"A cross-sectional analysis of meteorological factors and SARS-CoV-2 transmission in 409 cities across 26 countries".
+
+# DOI
+https://zenodo.org/badge/DOI/10.5281/zenodo.5215842.svg
 
 # Data
 The file mcc_covid_data_analysis.RData contains the metereological variables, the effective reproduction number Re, and city level covariates used in the analysis
