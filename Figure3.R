@@ -1,15 +1,17 @@
-# LOAD THE DATA
-load("mcc_covid_data_analysis.RData")
-
-# I LOAD THE PACKAGES
+# PACKAGES
 library(tidyverse)
 library(classInt)
 library(patchwork)
 library(sf)
 
-library(splines); library(mixmeta); library(dlnm)
+library(splines)
+library(mixmeta)
+library(dlnm)
 
-# I CALCULATE THE VARIANCE
+# LOAD THE DATA
+load("mcc_covid_data_analysis.RData")
+
+# CALCULATE THE VARIANCE
 data$r.var<-data$r.sd^2
 
 # WALD TEST
@@ -306,7 +308,7 @@ summary(modelD8ml)
 ###### Figure 3
 ##################################################
 
-# functions
+# RR extract function
 
 rrchange_extract <- function(x){
   
@@ -334,62 +336,130 @@ vardistr <- filter(vardistr, var <= mx, var >= min)
 
 # plots
 
-p1 <- filter(df, panel == "A") %>% ggplot() + 
-  geom_hline(yintercept = 0, size = .5, linetype = "dashed", colour = "grey50") +
-  geom_ribbon(aes(var, ymin = low, ymax = high), fill = "grey90", alpha = .6) +
-  geom_line(aes(var, fit, colour = panel), show.legend = FALSE, size = .8) +
-  geom_rug(data = filter(vardistr, panel == "A"), aes(var, colour = panel), inherit.aes = TRUE, alpha = .5, show.legend = FALSE) +
-  scale_color_manual(values = c("#cb181d", "#08519c", "#08519c", "#ae017e")) +
-  scale_y_continuous(limits = c(-0.21, .2)) +
-  labs(y = expression(R[e]~"difference"), x = "Mean temperature (ºC)", title = "p = 0.014") +
-  
-  theme_bw() +
-  theme(strip.text = element_text(hjust = 0.08, size = 10),
-        plot.title = element_text(face = "plain", size = 10))
+p1 <- filter(df, panel == "A") %>% 
+       ggplot() + 
+        geom_hline(yintercept = 0, 
+                   size = .5, 
+                   linetype = "dashed", 
+                   colour = "grey50") +
+        geom_ribbon(aes(var, 
+                        ymin = low, 
+                        ymax = high), 
+                    fill = "grey90", 
+                    alpha = .6) +
+        geom_line(aes(var, 
+                      fit, 
+                      colour = panel),
+                  size = .8,
+                  show.legend = FALSE) +
+        geom_rug(data = filter(vardistr, panel == "A"), 
+                 aes(var, colour = panel), 
+                 alpha = .5, 
+                 inherit.aes = TRUE, 
+                 show.legend = FALSE) +
+       scale_color_manual(values = c("#cb181d", "#08519c", "#08519c", "#ae017e")) +
+       scale_y_continuous(limits = c(-0.21, .2)) +
+       labs(y = expression(R[e]~"difference"), 
+            x = "Mean temperature (ºC)", 
+            title = "p = 0.014") +
+      theme_bw() +
+      theme(strip.text = element_text(hjust = 0.08, size = 10),
+            plot.title = element_text(face = "plain", size = 10))
 
 
-p2 <- filter(df, panel == "B") %>% ggplot() + 
-  geom_hline(yintercept = 0, size = .5, linetype = "dashed", colour = "grey50") +
-  geom_ribbon(aes(var, ymin = low, ymax = high), fill = "grey90", alpha = .6) +
-  geom_line(aes(var, fit), show.legend = FALSE, size = .8, colour = "#08519c") +
-  geom_rug(data = filter(vardistr, panel == "B"), aes(var), colour = "#08519c", inherit.aes = TRUE, alpha = .5, show.legend = FALSE) +
-  scale_y_continuous(limits = c(-0.21, .2)) +
-  labs(y = expression(R[e]~"difference"), x = "Relative humidity (%)", title = "p = 0.058") +
-  theme_bw() +
-  theme(strip.text = element_text(hjust = 0.08, size = 10),
-        axis.text.y = element_blank(),
-        axis.ticks.y = element_blank(),
-        axis.title.y = element_blank(),
-        plot.title = element_text(face = "plain", size = 10))
+p2 <- filter(df, panel == "B") %>% 
+        ggplot() + 
+        geom_hline(yintercept = 0, 
+                   size = .5, 
+                   linetype = "dashed", 
+                   colour = "grey50") +
+        geom_ribbon(aes(var, 
+                        ymin = low, 
+                        ymax = high), 
+                    fill = "grey90", 
+                    alpha = .6) +
+        geom_line(aes(var, 
+                      fit), 
+                  size = .8,
+                  colour = "#08519c",
+                  show.legend = FALSE) +
+        geom_rug(data = filter(vardistr, panel == "B"), 
+                 aes(var), 
+                 colour = "#08519c", 
+                 alpha = .5, 
+                 inherit.aes = TRUE,
+                 show.legend = FALSE) +
+        scale_y_continuous(limits = c(-0.21, .2)) +
+        labs(y = expression(R[e]~"difference"), 
+             x = "Relative humidity (%)", 
+             title = "p = 0.058") +
+        theme_bw() +
+        theme(strip.text = element_text(hjust = 0.08, size = 10),
+              axis.text.y = element_blank(),
+              axis.ticks.y = element_blank(),
+              axis.title.y = element_blank(),
+              plot.title = element_text(face = "plain", size = 10))
 
 
-p3 <- filter(df, panel == "C") %>% ggplot() + 
-  geom_hline(yintercept = 0, size = .5, linetype = "dashed", colour = "grey50") +
-  geom_ribbon(aes(var, ymin = low, ymax = high), fill = "grey90", alpha = .6) +
-  geom_line(aes(var, fit), show.legend = FALSE, size = .8, colour = "#08519c") +
-  geom_rug(data = filter(vardistr, panel == "C"), aes(var), colour = "#08519c", inherit.aes = TRUE, alpha = .5, show.legend = FALSE) +
-  #scale_color_manual(values = c("#cb181d", "#08519c", "#08519c", "#ae017e")) +
-  scale_y_continuous(limits = c(-0.21, .2)) +
-  labs(y = expression(R[e]~"difference"), x = expression("Absolute humidity (g/"*m^3*")"), title = "p = 0.036") +
-  theme_bw() +
-  theme(strip.text = element_text(hjust = 0.08, size = 10),
-        plot.title = element_text(face = "plain", size = 10))
+p3 <- filter(df, panel == "C") %>% 
+        ggplot() + 
+        geom_hline(yintercept = 0, 
+                   size = .5, 
+                   linetype = "dashed", 
+                   colour = "grey50") +
+        geom_ribbon(aes(var, 
+                        ymin = low, 
+                        ymax = high), 
+                    fill = "grey90", 
+                    alpha = .6) +
+        geom_line(aes(var, 
+                     fit),
+                 size = .8, 
+                 colour = "#08519c",
+                 show.legend = FALSE) +
+        geom_rug(data = filter(vardistr, panel == "C"), aes(var), colour = "#08519c", inherit.aes = TRUE, alpha = .5, show.legend = FALSE) +
+        scale_y_continuous(limits = c(-0.21, .2)) +
+        labs(y = expression(R[e]~"difference"), 
+             x = expression("Absolute humidity (g/"*m^3*")"), 
+             title = "p = 0.036") +
+        theme_bw() +
+        theme(strip.text = element_text(hjust = 0.08, size = 10),
+              plot.title = element_text(face = "plain", size = 10))
 
 
 
-p4 <- filter(df, panel == "D") %>% ggplot() + 
-  geom_hline(yintercept = 0, size = .5, linetype = "dashed", colour = "grey50") +
-  geom_ribbon(aes(var, ymin = low, ymax = high), fill = "grey90", alpha = .6) +
-  geom_line(aes(var, fit), show.legend = FALSE, size = .8, colour = "#ae017e") +
-  geom_rug(data = filter(vardistr, panel == "D"), aes(var), colour = "#ae017e", inherit.aes = TRUE, alpha = .5, show.legend = FALSE) +
-  scale_y_continuous(limits = c(-0.21, .2)) +
-  labs(y = expression(R[e]~"difference"), x = "Oxford Government Index", title = "p < 0.001") +
-  theme_bw() +
-  theme(strip.text = element_text(hjust = 0.08, size = 10),
-        axis.text.y = element_blank(),
-        axis.ticks.y = element_blank(),
-        axis.title.y = element_blank(),
-        plot.title = element_text(face = "plain", size = 10))
+p4 <- filter(df, panel == "D") %>%  
+        ggplot() + 
+        geom_hline(yintercept = 0, 
+                   size = .5, 
+                   linetype = "dashed", 
+                   colour = "grey50") +
+        geom_ribbon(aes(var, 
+                        ymin = low, 
+                        ymax = high), 
+                    fill = "grey90", 
+                    alpha = .6) +
+        geom_line(aes(var, 
+                      fit), 
+                  size = .8, 
+                  colour = "#ae017e",
+                  show.legend = FALSE) +
+        geom_rug(data = filter(vardistr, panel == "D"), 
+                 aes(var), 
+                 colour = "#ae017e",
+                 alpha = .5, 
+                 inherit.aes = TRUE,
+                 show.legend = FALSE) +
+        scale_y_continuous(limits = c(-0.21, .2)) +
+        labs(y = expression(R[e]~"difference"), 
+             x = "Oxford Government Index", 
+             title = "p < 0.001") +
+        theme_bw() +
+        theme(strip.text = element_text(hjust = 0.08, size = 10),
+              axis.text.y = element_blank(),
+              axis.ticks.y = element_blank(),
+              axis.title.y = element_blank(),
+              plot.title = element_text(face = "plain", size = 10))
 
 
 
